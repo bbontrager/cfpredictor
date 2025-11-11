@@ -5,7 +5,11 @@ This project is a learning sandbox for exploring Machine Learning concepts, tens
 
 It takes data from a Google sheet about NCAA college football records from 2024 and 2025, and uses the 2024 result to predict the outcomes of the 2025 season.
 
-
+This runs against a specific Google Sheet in a private account.
+JSON files for authenticating to Google Sheets are required in the local copy, and must not be committed to the repo.
+   credentials.json
+   token.json
+  
 Model 1 (which is expected to be imprecise due to a small sample size) uses
   Week of the season
   Conference
