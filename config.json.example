@@ -10,7 +10,9 @@
     "conference_range": "The range containing conferences (ID and Name)",
     "playoff_rounds_range": "The range containing Playoff Rounds (ID and name)",
     "cfp_seed_result_week": "Which week contains the CFP rankings and playoff seeds that set the bracket",
-    "playoff_result_week": "Which week contains the final playoff results."
+    "playoff_result_week": "Which week contains the final playoff results.",
+    "top_n": "The number of teams in the top n rankings... typically 25 but we could run with less" 
+
   },
   "spreadsheet_id": "your spreadsheet ID here",
   "training_sheet": "2024",
@@ -21,6 +23,8 @@
   "conference_range": "F2:G10",
   "playoff_rounds_range": "I2:J6",
   "cfp_seed_result_week": 16,
-  "playoff_result_week": 20
+  "playoff_result_week": 20,
+  "top_n": 25
+
 
 }

@@ -48,7 +48,7 @@ try:
     PLAYOFF_RANGE= config['playoff_rounds_range']
     CFP_RESULT_WEEK= config['cfp_seed_result_week']
     PLAYOFF_RESULT_WEEK= config['playoff_result_week']
-
+    RANK_TOP_N= config['top_n']
 
 
 except FileNotFoundError as e:
@@ -142,7 +142,7 @@ def normalize_season(season):
        elif row[6]=='':
           row_result.append(0.)
        else:          
-          row_result.append((26.-float(row[6]))/25)
+          row_result.append((float(RANK_TOP_N+1)-float(row[6]))/RANK_TOP_N)
        
 
        # convert COACHES rank (out of 25) to float, if there is an AP rank, with ranks closer to 1 scoring a higher float
@@ -151,7 +151,7 @@ def normalize_season(season):
        elif row[7]=='':
           row_result.append(0.)
        else:          
-          row_result.append((26.-float(row[7]))/25)
+          row_result.append((float(RANK_TOP_N+1)-float(row[7]))/RANK_TOP_N)
        
        # convert CFP rank (out of 25) to float, if there is an AP rank, with ranks closer to 1 scoring a higher float
        if len(row)<=8:
@@ -159,7 +159,7 @@ def normalize_season(season):
        elif row[8]=='':
           row_result.append(0.)
        else:          
-          row_result.append((26.-float(row[8]))/25)
+          row_result.append((float(RANK_TOP_N+1)-float(row[8]))/RANK_TOP_N)
        
        float_values.append(row_result)
 
