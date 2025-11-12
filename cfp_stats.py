@@ -235,26 +235,26 @@ if __name__ == '__main__':
     #print(CONF_ARRAY)
     #print(RESULT_ARRAY)
 
-    season_24=read_sheet_data(TRAIN_RECORDS)
-    #print(season_24)
-    normal_24=normalize_season(season_24)
-    #print(normal_24)
-    # at this point, normal_24 is useful for training, equivalent to M1_TRAIN_RANGE_NAME
+    season_train=read_sheet_data(TRAIN_RECORDS)
+    #print(season_train)
+    normal_train=normalize_season(season_train)
+    #print(normal_train)
+    # at this point, normal_train is useful for training, equivalent to M1_TRAIN_RANGE_NAME
 
 def init_cfp_model():
     # initialize the model
     get_reference_data()
-    season_24=read_sheet_data(TRAIN_RECORDS)
-    normal_24=normalize_season(season_24)
-    season_25=read_sheet_data(CURRENT_RECORDS)
+    season_train=read_sheet_data(TRAIN_RECORDS)
+    normal_train=normalize_season(season_train)
+    current_season=read_sheet_data(CURRENT_RECORDS)
 
 
 def get_m1_train_data():
     #data = read_sheet_data(M1_TRAIN_RANGE_NAME)
     #return data
-    season_24=read_sheet_data(TRAIN_RECORDS)
-    normal_24=normalize_season(season_24)    
-    return normal_24
+    season_train=read_sheet_data(TRAIN_RECORDS)
+    normal_train=normalize_season(season_train)    
+    return normal_train
 
 def get_m1_results_rank():
     data = read_sheet_data(M1_TRAIN_RESULTS_RANGE_NAME)
