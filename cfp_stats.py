@@ -39,6 +39,11 @@ def load_config(config_path='config.json'):
 try:
     config = load_config()
     SPREADSHEET_ID = config['spreadsheet_id']
+    TRAIN_SHEET= config['training_sheet']
+    TRAIN_RANGE= config['training_range']
+    CURRENT_SHEET= config['training_sheet']
+    CURRENT_RANGE= config['training_range']
+
 except FileNotFoundError as e:
     print(f"Error: {e}")
     print("Please create a config.json file with your spreadsheet_id")
@@ -58,10 +63,10 @@ except json.JSONDecodeError as e:
 # Define the scope and spreadsheet details
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 #SPREADSHEET_ID = ''  # Replace with your Google Sheet ID  # now read from config.json
-TRAIN_SHEET = '2024'
-RECORDS_2024 = f'{TRAIN_SHEET}!A2:J860'
-CURRENT_SHEET = '2025'
-RECORDS_2025 = f'{CURRENT_SHEET}!A2:J860'
+#TRAIN_SHEET = '2024'
+TRAIN_RECORDS = f'{TRAIN_SHEET}!{TRAIN_RANGE}'
+#CURRENT_SHEET = '2025'
+CURRENT_RECORDS = f'{CURRENT_SHEET}!{CURRENT_RANGE}'
 
 # A = week (number)   (train and results)  1 = preseason, 2=16 = season
 # B = Team ID
@@ -170,7 +175,7 @@ def current_lookup(team_name: str, week: int):
     target_name = team_name.strip().lower()
     week = int(week)
     
-    for row in RECORDS_2025:
+    for row in CURRENT_RECORDS:
         # row[0] = week, row[2] = team_name
         if row[0] == week and row[2].strip().lower() == target_name:
             return row
@@ -228,7 +233,7 @@ if __name__ == '__main__':
     #print(CONF_ARRAY)
     #print(RESULT_ARRAY)
 
-    season_24=read_sheet_data(RECORDS_2024)
+    season_24=read_sheet_data(TRAIN_RECORDS)
     #print(season_24)
     normal_24=normalize_season(season_24)
     #print(normal_24)
@@ -237,15 +242,15 @@ if __name__ == '__main__':
 def init_cfp_model():
     # initialize the model
     get_reference_data()
-    season_24=read_sheet_data(RECORDS_2024)
+    season_24=read_sheet_data(TRAIN_RECORDS)
     normal_24=normalize_season(season_24)
-    season_25=read_sheet_data(RECORDS_2025)
+    season_25=read_sheet_data(CURRENT_RECORDS)
 
 
 def get_m1_train_data():
     #data = read_sheet_data(M1_TRAIN_RANGE_NAME)
     #return data
-    season_24=read_sheet_data(RECORDS_2024)
+    season_24=read_sheet_data(TRAIN_RECORDS)
     normal_24=normalize_season(season_24)    
     return normal_24
 
