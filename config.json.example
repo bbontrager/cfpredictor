@@ -1,0 +1,8 @@
+{
+  "spreadsheet_id": "your_spreadsheet_id_here",
+  "description": "Configuration file for CFP Predictor",
+  "comments": {
+    "spreadsheet_id": "Get this from your Google Sheets URL",
+    "future_settings": "Additional settings will be added here"
+  }
+}

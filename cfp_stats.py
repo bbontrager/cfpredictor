@@ -2,7 +2,54 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import json
+import os
+from pathlib import Path
 
+
+
+# read JSON config file. put sensitive or configuration settings in there, not hard-coded here
+
+def load_config(config_path='config.json'):
+    """
+    Load configuration from JSON file.
+    
+    Args:
+        config_path: Path to the configuration file (default: 'config.json')
+    
+    Returns:
+        dict: Configuration dictionary
+    
+    Raises:
+        FileNotFoundError: If config file doesn't exist
+        json.JSONDecodeError: If config file is not valid JSON
+    """
+    config_file = Path(config_path)
+    
+    if not config_file.exists():
+        raise FileNotFoundError(
+            f"Configuration file '{config_path}' not found. "
+            f"Please create it based on config.json.example"
+        )
+    
+    with open(config_file, 'r') as f:
+        return json.load(f)
+
+# Load configuration
+try:
+    config = load_config()
+    SPREADSHEET_ID = config['spreadsheet_id']
+except FileNotFoundError as e:
+    print(f"Error: {e}")
+    print("Please create a config.json file with your spreadsheet_id")
+    exit(1)
+except KeyError:
+    print("Error: 'spreadsheet_id' not found in config.json")
+    print("Please ensure your config.json contains a 'spreadsheet_id' field")
+    exit(1)
+except json.JSONDecodeError as e:
+    print(f"Error: Invalid JSON in config.json: {e}")
+    exit(1)
 
 # Version 1 used a range in the spreadsheet to normalize values
 # Version 2 uses reads the raw Win/Loss/Rank data and normalizes here
@@ -10,7 +57,7 @@ from googleapiclient.errors import HttpError
 
 # Define the scope and spreadsheet details
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-SPREADSHEET_ID = '1twmhwlYZK-k5f-BpY7jM-nPPRmSfqqpeTscSXOszQVw'  # Replace with your Google Sheet ID
+#SPREADSHEET_ID = ''  # Replace with your Google Sheet ID  # now read from config.json
 TRAIN_SHEET = '2024'
 RECORDS_2024 = f'{TRAIN_SHEET}!A2:J860'
 CURRENT_SHEET = '2025'
