@@ -43,6 +43,13 @@ try:
     TRAIN_RANGE= config['training_range']
     CURRENT_SHEET= config['training_sheet']
     CURRENT_RANGE= config['training_range']
+    REF_SHEET= config['reference_sheet']
+    CONF_RANGE= config['conference_range']
+    PLAYOFF_RANGE= config['playoff_rounds_range']
+    CFP_RESULT_WEEK= config['cfp_seed_result_week']
+    PLAYOFF_RESULT_WEEK= config['playoff_result_week']
+
+
 
 except FileNotFoundError as e:
     print(f"Error: {e}")
@@ -62,10 +69,7 @@ except json.JSONDecodeError as e:
 
 # Define the scope and spreadsheet details
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-#SPREADSHEET_ID = ''  # Replace with your Google Sheet ID  # now read from config.json
-#TRAIN_SHEET = '2024'
 TRAIN_RECORDS = f'{TRAIN_SHEET}!{TRAIN_RANGE}'
-#CURRENT_SHEET = '2025'
 CURRENT_RECORDS = f'{CURRENT_SHEET}!{CURRENT_RANGE}'
 
 # A = week (number)   (train and results)  1 = preseason, 2=16 = season
@@ -82,8 +86,8 @@ CURRENT_RECORDS = f'{CURRENT_SHEET}!{CURRENT_RANGE}'
 
 
 REF_SHEET='Reference Data'
-CONFERENCE_NAMES = f'{REF_SHEET}!F2:G10'
-PLAYOFF_ROUNDS = f'{REF_SHEET}!I2:J6'
+CONFERENCE_NAMES = f'{REF_SHEET}!{CONF_RANGE}'
+PLAYOFF_ROUNDS = f'{REF_SHEET}!{PLAYOFF_RANGE}'
 
 
 
@@ -92,8 +96,6 @@ M1_train_data = None
 M2_result_data = None
 CONF_ARRAY = None
 RESULT_ARRAY = None
-CFP_RESULT_WEEK=16
-PLAYOFF_RESULT_WEEK=20
 
 
 def get_reference_data():
