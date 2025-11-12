@@ -1,8 +1,26 @@
 {
-  "spreadsheet_id": "your_spreadsheet_id_here",
   "description": "Configuration file for CFP Predictor",
   "comments": {
     "spreadsheet_id": "Get this from your Google Sheets URL",
-    "future_settings": "Additional settings will be added here"
-  }
+    "training_sheet": "The tab in the worksheet used for training",
+    "training_range": "The range of records in the training tab",
+    "current_sheet": "The tab in the worksheet containing current year data, for making predictions",
+    "current_range": "The range of data in the current year tab",
+    "reference_sheet": "The tab containing reference data (teams, conferences, etc)",
+    "conference_range": "The range containing conferences (ID and Name)",
+    "playoff_rounds_range": "The range containing Playoff Rounds (ID and name)",
+    "cfp_seed_result_week": "Which week contains the CFP rankings and playoff seeds that set the bracket",
+    "playoff_result_week": "Which week contains the final playoff results."
+  },
+  "spreadsheet_id": "your spreadsheet ID here",
+  "training_sheet": "2024",
+  "training_range": "A2:J860",
+  "current_sheet": "2025",
+  "current_range": "A2:J860",
+  "reference_sheet": "Reference Data",
+  "conference_range": "F2:G10",
+  "playoff_rounds_range": "I2:J6",
+  "cfp_seed_result_week": 16,
+  "playoff_result_week": 20
+
 }
