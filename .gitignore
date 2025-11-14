@@ -5,6 +5,10 @@ token.json
 # Configuration files (DO NOT commit)
 config.json
 
+
+# Temporary models
+*.keras
+
 # Python cache
 __pycache__/
 *.py[cod]
