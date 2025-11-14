@@ -5,6 +5,8 @@ from googleapiclient.errors import HttpError
 import json
 import os
 from pathlib import Path
+import tensorflow as tf
+import numpy as np
 
 
 
@@ -108,9 +110,76 @@ def get_reference_data():
     RESULT_ARRAY = [row[1] for row in rounds]
 
 
+def prepare_season_raw(season):
+    """
+    Prepare season data WITHOUT normalization - returns raw numeric values.
+    Normalization will be handled by TensorFlow layers in the model.
+    
+    Returns:
+        dict: Dictionary with separate arrays for each feature type
+    """
+    global CFP_RESULT_WEEK, CONF_ARRAY
+    
+    weeks = []
+    conferences = []
+    win_pcts = []
+    ap_ranks = []
+    coaches_ranks = []
+    cfp_ranks = []
+    
+    for row in season:
+        # Week (1-16)
+        weeks.append(float(row[0]))
+        
+        # Conference ID (1-based index)
+        conferenceID = next((i for i, v in enumerate(CONF_ARRAY) if v == row[3]), None)
+        conferences.append(float(conferenceID + 1))
+        
+        # Win percentage
+        if len(row) <= 4 or row[4] == '':
+            win_pcts.append(0.0)
+        elif float(row[4]) + float(row[5]) == 0:
+            win_pcts.append(0.0)
+        else:
+            win_pcts.append(float(row[4]) / (float(row[4]) + float(row[5])))
+        
+        # AP Rank (1-25, or 0 for unranked)
+        if len(row) <= 6 or row[6] == '':
+            ap_ranks.append(0.0)
+        else:
+            ap_ranks.append(float(row[6]))
+        
+        # Coaches Rank (1-25, or 0 for unranked)
+        if len(row) <= 7 or row[7] == '':
+            coaches_ranks.append(0.0)
+        else:
+            coaches_ranks.append(float(row[7]))
+        
+        # CFP Rank (1-25, or 0 for unranked)
+        if len(row) <= 8 or row[8] == '':
+            cfp_ranks.append(0.0)
+        else:
+            cfp_ranks.append(float(row[8]))
+    
+    return {
+        'weeks': np.array(weeks),
+        'conferences': np.array(conferences),
+        'win_pcts': np.array(win_pcts),
+        'ap_ranks': np.array(ap_ranks),
+        'coaches_ranks': np.array(coaches_ranks),
+        'cfp_ranks': np.array(cfp_ranks)
+    }
+
+
 
 def normalize_season(season):
-    # process the data  (convert to an array of floating points)
+    """
+    DEPRECATED: Use prepare_season_raw() instead.
+    This function is kept for backward compatibility but should be replaced
+    with TensorFlow preprocessing layers in the model.
+    
+    Process the data (convert to an array of floating points).
+    """
 
     global CFP_RESULT_WEEK, CONF_ARRAY
     float_values = []
@@ -164,6 +233,52 @@ def normalize_season(season):
        float_values.append(row_result)
 
     return float_values
+
+
+
+def create_normalization_layers(training_data):
+    """
+    Create and adapt normalization layers based on training data.
+    Should be called once with training data before building models.
+    
+    Args:
+        training_data: Dict from prepare_season_raw() with raw feature arrays
+    
+    Returns:
+        dict: Dictionary of adapted normalization layers
+    """
+    normalizers = {}
+    
+    # Week normalizer (1-16)
+    week_norm = tf.keras.layers.Normalization(name='week_norm')
+    week_norm.adapt(training_data['weeks'].reshape(-1, 1))
+    normalizers['week'] = week_norm
+    
+    # Conference normalizer
+    conf_norm = tf.keras.layers.Normalization(name='conference_norm')
+    conf_norm.adapt(training_data['conferences'].reshape(-1, 1))
+    normalizers['conference'] = conf_norm
+    
+    # Win percentage normalizer (already 0-1, but standardize)
+    winpct_norm = tf.keras.layers.Normalization(name='winpct_norm')
+    winpct_norm.adapt(training_data['win_pcts'].reshape(-1, 1))
+    normalizers['win_pct'] = winpct_norm
+    
+    # Rank normalizers (handle 0 = unranked, 1-25 = ranked)
+    # Use inverse ranks so higher rank = higher value
+    ap_norm = tf.keras.layers.Normalization(name='ap_rank_norm')
+    ap_norm.adapt(training_data['ap_ranks'].reshape(-1, 1))
+    normalizers['ap_rank'] = ap_norm
+    
+    coaches_norm = tf.keras.layers.Normalization(name='coaches_rank_norm')
+    coaches_norm.adapt(training_data['coaches_ranks'].reshape(-1, 1))
+    normalizers['coaches_rank'] = coaches_norm
+    
+    cfp_norm = tf.keras.layers.Normalization(name='cfp_rank_norm')
+    cfp_norm.adapt(training_data['cfp_ranks'].reshape(-1, 1))
+    normalizers['cfp_rank'] = cfp_norm
+    
+    return normalizers
 
 
 def normalize_results(results):
@@ -237,6 +352,19 @@ if __name__ == '__main__':
 
     season_train=read_sheet_data(TRAIN_RECORDS)
     #print(season_train)
+    
+
+    # New approach: Get raw data for TensorFlow preprocessing
+    raw_data = prepare_season_raw(season_train)
+    print("Raw data prepared:")
+    print(f"  Weeks shape: {raw_data['weeks'].shape}")
+    print(f"  AP ranks sample: {raw_data['ap_ranks'][:5]}")
+
+    # Create normalization layers
+    normalizers = create_normalization_layers(raw_data)
+    print("\nNormalization layers created and adapted to training data")
+
+    # old approach
     normal_train=normalize_season(season_train)
     #print(normal_train)
     # at this point, normal_train is useful for training, equivalent to M1_TRAIN_RANGE_NAME
