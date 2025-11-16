@@ -3,6 +3,7 @@ import model1
 
 import numpy as np
 
+
 def main():  
     # Step 1: Load reference data
     print("Step 1: Loading reference data...")
@@ -59,39 +60,31 @@ def main():
         2      # CFP Rank
     ]]
     
-    print("\nTest input (raw values):")
-    print(f"  Week: 16, Conference: 1, Win%: 0.92")
-    print(f"  AP Rank: 3, Coaches: 4, CFP: 2")
 
-    test_input = [[
-        12,    # Week 16
-        1,     # Conference ID
-        1.0,  # Win percentage (9-0)
-        1,     # AP Rank
-        1,     # Coaches Rank
-        1      # CFP Rank
-    ]]
-    
-    
-    print("\nTest input (raw values):")
-    print(f"  Week: 12, Conference: 1 (Big Ten), Win%: 1.0")
-    print(f"  AP Rank: 1, Coaches: 1, CFP: 1")
+    team = "Ohio State"   # Home team
+    week = 12
 
+    print(f"\nFetching current stats for {team} (Week {week})...")
+    test_input = cfp_stats.current_lookup(team, week)
+    print(test_input)
+#    if not rows:
+#        print("No game found.")
+#    else:
+#        # Take the first (and only) row
+#        row = rows[0]
+#        feature_values = row[3:]  # Skip week, ?, team_name → just features
+#
+#        test_input = np.array(feature_values, dtype=float).reshape(1, -1)
     
     predicted_rank = rank_model.predictRank(test_input)
+    predicted_seed = rank_model.predictSeed(test_input)
+    predicted_result = rank_model.predictResult(test_input)
     
     # Step 8: Save the model (includes preprocessing layers!)
     print("\nStep 8: Saving model...")
     rank_model.save_model('rank_model_with_preprocessing.keras')
     print("  - Model saved with preprocessing layers included")
-    print("  - No need to save normalization separately!")
     
-    print("\n=== Key Benefits of This Approach ===")
-    print("✓ No manual normalization/denormalization code")
-    print("✓ Normalization is part of the model")
-    print("✓ Model can accept raw input values")
-    print("✓ Easier to maintain and less error-prone")
-    print("✓ Model is self-contained when saved")
 
 
 def example_using_saved_model():
@@ -117,6 +110,10 @@ def example_using_saved_model():
     
     print("Making prediction with raw input values...")
     loaded_model.predictRank(test_input)
+    loaded_model.predictSeed(test_input)
+    loaded_model.predictResult(test_input)
+
+
 
 
 def backward_compatible_example():

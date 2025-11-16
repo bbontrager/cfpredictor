@@ -43,8 +43,8 @@ try:
     SPREADSHEET_ID = config['spreadsheet_id']
     TRAIN_SHEET= config['training_sheet']
     TRAIN_RANGE= config['training_range']
-    CURRENT_SHEET= config['training_sheet']
-    CURRENT_RANGE= config['training_range']
+    CURRENT_SHEET= config['current_sheet']
+    CURRENT_RANGE= config['current_range']
     REF_SHEET= config['reference_sheet']
     CONF_RANGE= config['conference_range']
     PLAYOFF_RANGE= config['playoff_rounds_range']
@@ -98,17 +98,18 @@ M1_train_data = None
 M2_result_data = None
 CONF_ARRAY = None
 RESULT_ARRAY = None
+CURRENT_ARRAY = None
 
 
 def get_reference_data():
     """Loading Reference Data"""
-    global CONF_ARRAY, RESULT_ARRAY
+    global CONF_ARRAY, RESULT_ARRAY, CURRENT_ARRAY
     conf=read_sheet_data(CONFERENCE_NAMES)
     rounds=read_sheet_data(PLAYOFF_ROUNDS)
+    CURRENT_ARRAY=read_sheet_data(CURRENT_RECORDS)
 
     CONF_ARRAY = [row[1] for row in conf]
     RESULT_ARRAY = [row[1] for row in rounds]
-
 
 def prepare_season_raw(season):
     """
@@ -292,10 +293,24 @@ def current_lookup(team_name: str, week: int):
     target_name = team_name.strip().lower()
     week = int(week)
     
-    for row in CURRENT_RECORDS:
-        # row[0] = week, row[2] = team_name
-        if row[0] == week and row[2].strip().lower() == target_name:
-            return row
+    global CURRENT_ARRAY
+
+    # print(CURRENT_ARRAY)
+
+    resultrow=[]
+    result=[]
+    for row in CURRENT_ARRAY:
+        if row[0] == str(week) and row[2].strip().lower() == target_name:
+
+            resultrow.append(float(row[0]))  # week
+            resultrow.append(float(row[1]))  # conf ID
+            resultrow.append(float(row[4]) / (float(row[4]) + float(row[5])))  # win pct
+            resultrow.append(float(row[5]))  # AP rank
+            resultrow.append(float(row[6]))  # coaches tank
+            resultrow.append(float(row[7]))  # CFP rank
+
+            result.append(resultrow)
+            return result
     
     # Not found
     print(f"No record found for '{team_name.strip()}' in week {week}")
