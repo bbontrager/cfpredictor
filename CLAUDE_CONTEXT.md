@@ -8,11 +8,11 @@
 
 \### Main Source Files
 
-\- \*\*cfp\_stats.py\*\*: https://raw.githubusercontent.com/bbontrager/cfpredictor/refs/heads/claude/cfp\_stats.py
+\- \*\*cfp\_stats.py\*\*: https://raw.githubusercontent.com/bbontrager/cfpredictor/refs/heads/claude/cfp_stats.py
 
 \- \*\*model1.py\*\*: https://raw.githubusercontent.com/bbontrager/cfpredictor/refs/heads/claude/model1.py
 
-\- \*\*pred\_model\_1.py\*\*: https://raw.githubusercontent.com/bbontrager/cfpredictor/refs/heads/claude/pred\_model\_1.py
+\- \*\*pred\_model\_1.py\*\*: https://raw.githubusercontent.com/bbontrager/cfpredictor/refs/heads/claude/pred_model_1.py
 
 
 
