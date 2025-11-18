@@ -11,7 +11,9 @@
     "playoff_rounds_range": "The range containing Playoff Rounds (ID and name)",
     "cfp_seed_result_week": "Which week contains the CFP rankings and playoff seeds that set the bracket",
     "playoff_result_week": "Which week contains the final playoff results.",
-    "top_n": "The number of teams in the top n rankings... typically 25 but we could run with less" 
+    "top_n": "The number of teams in the top n rankings... typically 25 but we could run with less",  
+    "cfbd_api_key": "API key for collegefootballdata.com"
+
 
   },
   "spreadsheet_id": "your spreadsheet ID here",
@@ -24,7 +26,9 @@
   "playoff_rounds_range": "I2:J6",
   "cfp_seed_result_week": 16,
   "playoff_result_week": 20,
-  "top_n": 25
+  "top_n": 25,
+  "cfbd_api_key": "your CFBD API Key here"
+
 
 
 }
